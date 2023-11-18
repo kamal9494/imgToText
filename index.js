@@ -8,7 +8,7 @@ const port = 3000;
 require("dotenv").config();
 
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://itot.netlify.app, http://127.0.0.1:5500");
+  res.header("Access-Control-Allow-Origin", "https://itot.netlify.app");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type");
   next();
