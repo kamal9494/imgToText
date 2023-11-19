@@ -1,6 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const { ImageAnnotatorClient } = require("@google-cloud/vision");
+const bodyParser = require("body-parser");
 
 const app = express();
 const port = 3000;
@@ -34,6 +35,8 @@ const vision = new ImageAnnotatorClient({
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+app.use(bodyParser.json({ limit: "10mb" }));
+
 app.post("/text", upload.single("image"), async (req, res) => {
   try {
     console.log(req.file);
@@ -51,7 +54,7 @@ app.post("/text", upload.single("image"), async (req, res) => {
   }
 });
 
-app.post("/text2", upload.single("image"), async (req, res) => {
+app.post("/text2", async (req, res) => {
   try {
     const base64Image = req.body.image;
 
