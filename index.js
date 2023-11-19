@@ -8,6 +8,16 @@ const port = 3000;
 require("dotenv").config();
 
 app.use((req, res, next) => {
+  // res.header("Access-Control-Allow-Origin", "https://itot.netlify.app");
+  const allowedOrigins = [
+    "https://itot.netlify.app",
+    "http://localhost:3000",
+    "http://localhost:4000",
+  ];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
   res.header("Access-Control-Allow-Origin", "https://itot.netlify.app");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type");
@@ -17,8 +27,7 @@ app.use((req, res, next) => {
 const vision = new ImageAnnotatorClient({
   credentials: {
     client_email: process.env.GOOGLE_CLIENT_EMAIL,
-    private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-
+    private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
   },
 });
 
