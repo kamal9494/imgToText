@@ -1,11 +1,9 @@
 const express = require("express");
 const multer = require("multer");
 const { ImageAnnotatorClient } = require("@google-cloud/vision");
-const bodyParser = require("body-parser");
 
 const app = express();
 const port = 3000;
-app.use(bodyParser.json({ limit: "5mb" }));
 
 require("dotenv").config();
 
@@ -33,27 +31,35 @@ const vision = new ImageAnnotatorClient({
   },
 });
 
-// const storage = multer.memoryStorage();
-// const upload = multer({ storage: storage });
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
-app.post("/text", async (req, res) => {
+app.post("/text", upload.single("image"), async (req, res) => {
   try {
-    console.log(req);
-    // const [result] = await vision.textDetection(req.file.buffer);
-    // const textAnnotations = result.textAnnotations;
+    console.log(req.file);
+    const [result] = await vision.textDetection(req.file.buffer);
+    const textAnnotations = result.textAnnotations;
 
-    // const extractedText = textAnnotations
-    //   ? textAnnotations[0].description
-    //   : "No text found";
+    const extractedText = textAnnotations
+      ? textAnnotations[0].description
+      : "No text found";
 
-    // res.json(extractedText);
+    res.json(extractedText);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error processing image " + error);
+  }
+});
 
-    const imageBuffer = Buffer.from(req.body.image, "base64");
-    if (!imageBuffer) {
-      return res.status(400).send("Image buffer is required");
-    }
+app.post("/text2", upload.single("image"), async (req, res) => {
+  try {
+    const base64Image = req.body.image;
 
-    const [result] = await vision.textDetection({ content: imageBuffer });
+    // Remove the data URI prefix and create a Buffer from the base64 string
+    const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, "");
+    const imageBuffer = Buffer.from(base64Data, "base64");
+
+    const [result] = await vision.textDetection(imageBuffer);
     const textAnnotations = result.textAnnotations;
 
     const extractedText = textAnnotations
