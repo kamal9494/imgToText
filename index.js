@@ -12,6 +12,7 @@ app.use((req, res, next) => {
   // res.header("Access-Control-Allow-Origin", "https://itot.netlify.app");
   const allowedOrigins = [
     'https://itot.netlify.app',
+    'https://ai-exameval.netlify.app/',
     'http://localhost:3000',
     'http://localhost:4000',
     'ai-exameval.netlify.app',
