@@ -14,6 +14,7 @@ app.use((req, res, next) => {
     'https://itot.netlify.app',
     'http://localhost:3000',
     'http://localhost:4000',
+    'ai-exameval.netlify.app',
   ];
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
